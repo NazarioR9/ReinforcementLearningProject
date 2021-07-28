@@ -1,5 +1,5 @@
-from monte_carlo_methods_env import TicTacToe
-from temporal_difference_learning_algos import *
+from .envs import TicTacToe
+from .temporal_difference_learning_algos import *
 from ..do_not_touch.single_agent_env_wrapper import Env3
 
 
@@ -12,7 +12,7 @@ def sarsa_on_tic_tac_toe_solo() -> PolicyAndActionValueFunction:
     """
     env = TicTacToe()
 
-    return sarsa(env, alpha=0.1, epsilon=1, gamma=0.9, max_episodes=10000)
+    return sarsa(env, alpha=0.1, epsilon=1, gamma=0.9, max_episodes=10000, env_name='tictactoe')
 
 
 def q_learning_on_tic_tac_toe_solo() -> PolicyAndActionValueFunction:
@@ -24,7 +24,7 @@ def q_learning_on_tic_tac_toe_solo() -> PolicyAndActionValueFunction:
     """
     env = TicTacToe()
 
-    return q_learning(env, alpha=0.1, epsilon=0.1, gamma=0.1, max_episodes=10000)
+    return q_learning(env, alpha=0.1, epsilon=0.9, gamma=0.9, max_episodes=10000, env_name='tictactoe')
 
 
 def expected_sarsa_on_tic_tac_toe_solo() -> PolicyAndActionValueFunction:
@@ -36,7 +36,7 @@ def expected_sarsa_on_tic_tac_toe_solo() -> PolicyAndActionValueFunction:
     """
     env = TicTacToe()
 
-    return expected_sarsa(env, alpha=0.1, epsilon=0.1, gamma=0.1, max_episodes=10000)
+    return expected_sarsa(env, alpha=0.1, epsilon=0.9, gamma=0.9, max_episodes=10000, env_name='tictactoe')
 
 
 def sarsa_on_secret_env3() -> PolicyAndActionValueFunction:
@@ -48,7 +48,7 @@ def sarsa_on_secret_env3() -> PolicyAndActionValueFunction:
     """
     env = Env3()
 
-    return sarsa(env, alpha=0.1, epsilon=0.1, gamma=0.1, max_episodes=10000)
+    return sarsa(env, alpha=0.1, epsilon=1.0, gamma=0.9, max_episodes=10000, env_name='env3')
 
 
 def q_learning_on_secret_env3() -> PolicyAndActionValueFunction:
@@ -60,7 +60,7 @@ def q_learning_on_secret_env3() -> PolicyAndActionValueFunction:
     """
     env = Env3()
 
-    return q_learning(env, alpha=0.1, epsilon=0.1, gamma=0.1, max_episodes=10000)
+    return q_learning(env, alpha=0.1, epsilon=0.9, gamma=0.9, max_episodes=10000, env_name='env3')
 
 
 def expected_sarsa_on_secret_env3() -> PolicyAndActionValueFunction:
@@ -72,7 +72,7 @@ def expected_sarsa_on_secret_env3() -> PolicyAndActionValueFunction:
     """
     env = Env3()
 
-    return expected_sarsa(env, alpha=0.1, epsilon=0.1, gamma=0.1, max_episodes=10000)
+    return expected_sarsa(env, alpha=0.1, epsilon=0.9, gamma=0.9, max_episodes=10000, env_name='env3')
 
 
 def demo():

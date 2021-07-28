@@ -1,10 +1,17 @@
 import numpy as np
 
+from .helper import RewardTracker, WEIGHT_PATH, save_to_pickle
 from ..do_not_touch.contracts import SingleAgentEnv
 from ..do_not_touch.result_structures import PolicyAndActionValueFunction
 
 
-def sarsa(env: SingleAgentEnv, alpha: float, epsilon: float, gamma: float, max_episodes: int):
+def sarsa(env: SingleAgentEnv, alpha: float, epsilon: float, gamma: float, max_episodes: int, env_name: str = ''):
+    # *********** Helper *********
+    name = f'{env_name}_sarsa'
+    print_every_n_episodes = 10
+    reward_tracker = RewardTracker(name, 5*print_every_n_episodes)
+    # *********** Helper *********
+
     pi = {}
     b = {}
     q = {}
@@ -32,7 +39,7 @@ def sarsa(env: SingleAgentEnv, alpha: float, epsilon: float, gamma: float, max_e
 
             for a_key, q_s_a in q[s].items():
                 if a_key == optimal_a:
-                    b[s][a_key] = 1.0 - epsilon + epsilon / available_actions_count
+                    b[s][a_key] = 1.0 - epsilon + (epsilon / available_actions_count)
                 else:
                     b[s][a_key] = epsilon / available_actions_count
 
@@ -63,13 +70,17 @@ def sarsa(env: SingleAgentEnv, alpha: float, epsilon: float, gamma: float, max_e
 
                 for a_key, q_s_a in q[s_p].items():
                     if a_key == next_optimal_a:
-                        b[s_p][a_key] = 1.0 - epsilon + epsilon / next_available_actions_count
+                        b[s_p][a_key] = 1.0 - epsilon + (epsilon / next_available_actions_count)
                     else:
                         b[s_p][a_key] = epsilon / next_available_actions_count
 
                 next_chosen_action = np.random.choice(list(b[s_p].keys()), 1, False, p=list(b[s_p].values()))[0]
 
                 q[s][chosen_action] += alpha * (r + gamma * q[s_p][next_chosen_action] - q[s][chosen_action])
+
+        # *********** Helper *********
+        reward_tracker(env.score())
+        # *********** Helper *********
 
     for s in q.keys():
         optimal_a = list(q[s].keys())[np.argmax(list(q[s].values()))]
@@ -79,10 +90,23 @@ def sarsa(env: SingleAgentEnv, alpha: float, epsilon: float, gamma: float, max_e
             else:
                 pi[s][a_key] = 0.0
 
-    return PolicyAndActionValueFunction(pi, q)
+    pi_q = PolicyAndActionValueFunction(pi, q)
+    weight = f'{WEIGHT_PATH}{env_name}_sarsa_{pi_q.__class__.__name__}'
+    save_to_pickle(pi_q, weight)
+
+    reward_tracker.save_to_image()
+    reward_tracker.save_to_file()
+
+    return pi_q
 
 
-def q_learning(env: SingleAgentEnv, alpha: float, epsilon: float, gamma: float, max_episodes: int) -> PolicyAndActionValueFunction:
+def q_learning(env: SingleAgentEnv, alpha: float, epsilon: float, gamma: float, max_episodes: int, env_name: str = '') -> PolicyAndActionValueFunction:
+    # *********** Helper *********
+    name = f'{env_name}_q_learning'
+    print_every_n_episodes = 10
+    reward_tracker = RewardTracker(name, 5 * print_every_n_episodes)
+    # *********** Helper *********
+
     pi = {}  # learned greedy policy
     b = {}  # behaviour epsilon-greedy policy
     q = {}  # action-value function of pi
@@ -110,7 +134,7 @@ def q_learning(env: SingleAgentEnv, alpha: float, epsilon: float, gamma: float, 
 
             for a_key, q_s_a in q[s].items():
                 if a_key == optimal_a:
-                    b[s][a_key] = 1.0 - epsilon + epsilon / available_actions_count
+                    b[s][a_key] = 1.0 - epsilon + (epsilon / available_actions_count)
                 else:
                     b[s][a_key] = epsilon / available_actions_count
 
@@ -139,6 +163,10 @@ def q_learning(env: SingleAgentEnv, alpha: float, epsilon: float, gamma: float, 
 
                 q[s][chosen_action] += alpha * (r + gamma * np.max(list(q[s_p].values())) - q[s][chosen_action])
 
+        # *********** Helper *********
+        reward_tracker(env.score())
+        # *********** Helper *********
+
     for s in q.keys():
         optimal_a = list(q[s].keys())[np.argmax(list(q[s].values()))]
         for a_key, q_s_a in q[s].items():
@@ -147,10 +175,23 @@ def q_learning(env: SingleAgentEnv, alpha: float, epsilon: float, gamma: float, 
             else:
                 pi[s][a_key] = 0.0
 
-    return PolicyAndActionValueFunction(pi, q)
+    pi_q = PolicyAndActionValueFunction(pi, q)
+    weight = f'{WEIGHT_PATH}{env_name}_q_learning_{pi_q.__class__.__name__}'
+    save_to_pickle(pi_q, weight)
+
+    reward_tracker.save_to_image()
+    reward_tracker.save_to_file()
+
+    return pi_q
 
 
-def expected_sarsa(env: SingleAgentEnv, alpha: float, epsilon: float, gamma: float, max_episodes: int) -> PolicyAndActionValueFunction:
+def expected_sarsa(env: SingleAgentEnv, alpha: float, epsilon: float, gamma: float, max_episodes: int, env_name: str = '') -> PolicyAndActionValueFunction:
+    # *********** Helper *********
+    name = f'{env_name}_expected_sarsa'
+    print_every_n_episodes = 10
+    reward_tracker = RewardTracker(name, 5*print_every_n_episodes)
+    # *********** Helper *********
+
     pi = {}  # learned greedy policy
     b = {}  # behaviour epsilon-greedy policy
     q = {}  # action-value function of pi
@@ -178,7 +219,7 @@ def expected_sarsa(env: SingleAgentEnv, alpha: float, epsilon: float, gamma: flo
 
             for a_key, q_s_a in q[s].items():
                 if a_key == optimal_a:
-                    b[s][a_key] = 1.0 - epsilon + epsilon / available_actions_count
+                    b[s][a_key] = 1.0 - epsilon + (epsilon / available_actions_count)
                 else:
                     b[s][a_key] = epsilon / available_actions_count
 
@@ -206,10 +247,14 @@ def expected_sarsa(env: SingleAgentEnv, alpha: float, epsilon: float, gamma: flo
                         q[s_p][a] = 0.0
 
                 expected_value = 0
-                for a_key, q_s_a in q[s].items():
+                for a_key, q_s_a in q[s_p].items():
                     expected_value += pi[s_p][a_key] * q[s_p][a_key]
 
                 q[s][chosen_action] += alpha * (r + gamma * expected_value - q[s][chosen_action])
+
+        # *********** Helper *********
+        reward_tracker(env.score())
+        # *********** Helper *********
 
     for s in q.keys():
         optimal_a = list(q[s].keys())[np.argmax(list(q[s].values()))]
@@ -219,4 +264,11 @@ def expected_sarsa(env: SingleAgentEnv, alpha: float, epsilon: float, gamma: flo
             else:
                 pi[s][a_key] = 0.0
 
-    return PolicyAndActionValueFunction(pi, q)
+    pi_q = PolicyAndActionValueFunction(pi, q)
+    weight = f'{WEIGHT_PATH}{env_name}_expected_sarsa_{pi_q.__class__.__name__}'
+    save_to_pickle(pi_q, weight)
+
+    reward_tracker.save_to_image()
+    reward_tracker.save_to_file()
+
+    return pi_q

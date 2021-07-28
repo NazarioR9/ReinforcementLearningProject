@@ -1,6 +1,6 @@
 from .dynamic_programming_algos import *
-from .dynamic_programming_env import *
-from .dynamic_programming_helper import show_grid_world
+from .envs import *
+from .helper import show_grid_world
 from ..do_not_touch.mdp_env_wrapper import Env1
 
 
@@ -12,7 +12,7 @@ def policy_evaluation_on_line_world() -> ValueFunction:
     """
     env = LineWorld(7)
 
-    return policy_evaluation(env, gamma=1.0, theta=0.001)
+    return policy_evaluation(env=env, gamma=0.99999, theta=0.000001, env_name='lineworld')
 
 
 def policy_iteration_on_line_world() -> PolicyAndValueFunction:
@@ -23,7 +23,7 @@ def policy_iteration_on_line_world() -> PolicyAndValueFunction:
     """
     env = LineWorld(7)
 
-    return policy_iteration(env, gamma=0.99999, theta=0.000001)
+    return policy_iteration(env, gamma=0.99999, theta=0.000001, env_name='lineworld')
 
 
 def value_iteration_on_line_world() -> PolicyAndValueFunction:
@@ -34,7 +34,7 @@ def value_iteration_on_line_world() -> PolicyAndValueFunction:
     """
     env = LineWorld(7)
 
-    return value_iteration(env, gamma=0.999, theta=0.0001)
+    return value_iteration(env, gamma=0.999, theta=0.0001, env_name='lineworld')
 
 
 def policy_evaluation_on_grid_world() -> ValueFunction:
@@ -45,7 +45,7 @@ def policy_evaluation_on_grid_world() -> ValueFunction:
     """
     env = GridWorld(5)
 
-    return policy_evaluation(env, gamma=1.0, theta=0.0001)
+    return policy_evaluation(env, gamma=0.9999, theta=0.00001, env_name='gridworld')
 
 
 def policy_iteration_on_grid_world() -> PolicyAndValueFunction:
@@ -56,7 +56,7 @@ def policy_iteration_on_grid_world() -> PolicyAndValueFunction:
     """
     env = GridWorld(5)
 
-    return policy_iteration(env, gamma=0.99999, theta=0.000001)
+    return policy_iteration(env, gamma=0.99999, theta=0.00001, env_name='gridworld')
 
 
 def value_iteration_on_grid_world() -> PolicyAndValueFunction:
@@ -67,7 +67,7 @@ def value_iteration_on_grid_world() -> PolicyAndValueFunction:
     """
     env = GridWorld(5)
 
-    return value_iteration(env, gamma=0.999, theta=0.0001)
+    return value_iteration(env, gamma=0.99, theta=0.001, env_name='gridworld')
 
 
 def policy_evaluation_on_secret_env1() -> ValueFunction:
@@ -78,7 +78,7 @@ def policy_evaluation_on_secret_env1() -> ValueFunction:
     """
     env = Env1()
 
-    return policy_evaluation(env, gamma=1.0, theta=0.0001)
+    return policy_evaluation(env, gamma=1.0, theta=0.0001, env_name='env1')
 
 
 def policy_iteration_on_secret_env1() -> PolicyAndValueFunction:
@@ -89,7 +89,7 @@ def policy_iteration_on_secret_env1() -> PolicyAndValueFunction:
     """
     env = Env1()
 
-    return policy_iteration(env, gamma=0.99999, theta=0.000001)
+    return policy_iteration(env, gamma=0.99999, theta=0.000001, env_name='env1')
 
 
 def value_iteration_on_secret_env1() -> PolicyAndValueFunction:
@@ -100,7 +100,7 @@ def value_iteration_on_secret_env1() -> PolicyAndValueFunction:
     """
     env = Env1()
 
-    return value_iteration(env, gamma=0.999, theta=0.0001)
+    return value_iteration(env, gamma=0.999, theta=0.0001, env_name='env1')
 
 
 def demo():

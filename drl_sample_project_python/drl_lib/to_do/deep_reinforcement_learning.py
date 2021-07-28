@@ -1,12 +1,6 @@
+from .deep_reinforcement_learning_algos import DeepQNetwork, episodic_semi_gradient_sarsa, deep_q_learning
+from .envs import *
 from ..do_not_touch.deep_single_agent_with_discrete_actions_env_wrapper import Env5
-
-
-class DeepQNetwork:
-    """
-    Contains the weights, structure of the q_network
-    """
-    # TODO
-    pass
 
 
 def episodic_semi_gradient_sarsa_on_tic_tac_toe_solo() -> DeepQNetwork:
@@ -16,8 +10,9 @@ def episodic_semi_gradient_sarsa_on_tic_tac_toe_solo() -> DeepQNetwork:
     Returns the optimal epsilon-greedy action_value function (Q(w)(s,a))
     Experiment with different values of hyper parameters and choose the most appropriate combination
     """
-    # TODO
-    pass
+    env = DeepTicTacToe()
+
+    return episodic_semi_gradient_sarsa(env, epsilon=0.1, gamma=0.9, max_episodes_count=3000, env_name='tictactoe')
 
 
 def deep_q_learning_on_tic_tac_toe_solo() -> DeepQNetwork:
@@ -27,8 +22,9 @@ def deep_q_learning_on_tic_tac_toe_solo() -> DeepQNetwork:
     Returns the optimal action_value function (Q(w)(s,a))
     Experiment with different values of hyper parameters and choose the most appropriate combination
     """
-    # TODO
-    pass
+    env = DeepTicTacToe()
+
+    return deep_q_learning(env, epsilon=0.1, gamma=0.9, max_episodes_count=3000, env_name='tictactoe')
 
 
 def episodic_semi_gradient_sarsa_on_pac_man() -> DeepQNetwork:
@@ -38,8 +34,9 @@ def episodic_semi_gradient_sarsa_on_pac_man() -> DeepQNetwork:
     Returns the optimal epsilon-greedy action_value function (Q(w)(s,a))
     Experiment with different values of hyper parameters and choose the most appropriate combination
     """
-    # TODO
-    pass
+    env = PacMan()
+
+    return episodic_semi_gradient_sarsa(env, epsilon=0.1, gamma=0.9, max_episodes_count=3000, env_name='pacman')
 
 
 def deep_q_learning_on_pac_man() -> DeepQNetwork:
@@ -49,8 +46,9 @@ def deep_q_learning_on_pac_man() -> DeepQNetwork:
     Returns the optimal action_value function (Q(w)(s,a))
     Experiment with different values of hyper parameters and choose the most appropriate combination
     """
-    # TODO
-    pass
+    env = PacMan()
+
+    return deep_q_learning(env, epsilon=0.1, gamma=0.9, max_episodes_count=3000, env_name='pacman')
 
 
 def episodic_semi_gradient_sarsa_on_secret_env5() -> DeepQNetwork:
@@ -62,7 +60,8 @@ def episodic_semi_gradient_sarsa_on_secret_env5() -> DeepQNetwork:
     """
     # TODO
     _env = Env5()
-    pass
+
+    return episodic_semi_gradient_sarsa(_env, epsilon=0.1, gamma=0.9, max_episodes_count=1000, env_name='env5')
 
 
 def deep_q_learning_on_secret_env5() -> DeepQNetwork:
@@ -74,15 +73,16 @@ def deep_q_learning_on_secret_env5() -> DeepQNetwork:
     """
     # TODO
     _env = Env5()
-    pass
+
+    return deep_q_learning(_env, epsilon=0.1, gamma=0.9, max_episodes_count=1000, env_name='env5')
 
 
 def demo():
-    print(episodic_semi_gradient_sarsa_on_tic_tac_toe_solo())
-    print(deep_q_learning_on_tic_tac_toe_solo())
-
+    # print(episodic_semi_gradient_sarsa_on_tic_tac_toe_solo())
+    # print(deep_q_learning_on_tic_tac_toe_solo())
+    #
     print(episodic_semi_gradient_sarsa_on_pac_man())
-    print(deep_q_learning_on_pac_man())
-
-    print(episodic_semi_gradient_sarsa_on_secret_env5())
-    print(deep_q_learning_on_secret_env5())
+    # print(deep_q_learning_on_pac_man())
+    #
+    # print(episodic_semi_gradient_sarsa_on_secret_env5())
+    # print(deep_q_learning_on_secret_env5())

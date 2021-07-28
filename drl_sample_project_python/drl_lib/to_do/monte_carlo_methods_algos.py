@@ -1,15 +1,20 @@
 import numpy as np
 
+from .helper import *
 from ..do_not_touch.contracts import SingleAgentEnv
 from ..do_not_touch.result_structures import PolicyAndActionValueFunction
 
 
-def monte_carlo_es(env: SingleAgentEnv, gamma: float, max_iter: int, ) -> PolicyAndActionValueFunction:
+def monte_carlo_es(env: SingleAgentEnv, gamma: float, max_iter: int, env_name: str = '') -> PolicyAndActionValueFunction:
+    # *********** Helper *********
+    name = f'{env_name}_monte_carlo_es'
+    print_every_n_episodes = 10
+    reward_tracker = RewardTracker(name, 5 * print_every_n_episodes)
+    # *********** Helper *********
+
     pi = {}
     q = {}
     returns = {}
-
-    SCORES = []
 
     for _ in range(max_iter):
         env.reset()
@@ -41,7 +46,9 @@ def monte_carlo_es(env: SingleAgentEnv, gamma: float, max_iter: int, ) -> Policy
             r = env.score() - old_score
             R.append(r)
 
-        SCORES.append(env.score())
+        # *********** Helper *********
+        reward_tracker(env.score())
+        # *********** Helper *********
 
         G = 0
         for t in reversed(range(len(S))):
@@ -70,12 +77,24 @@ def monte_carlo_es(env: SingleAgentEnv, gamma: float, max_iter: int, ) -> Policy
                 else:
                     pi[s_t][a_key] = 0.0
 
-    print(f'Score {__name__} : ', np.mean(SCORES))
-    return PolicyAndActionValueFunction(pi, q)
+    pi_q = PolicyAndActionValueFunction(pi, q)
+    weight = f'{WEIGHT_PATH}{env_name}_monte_carlo_es_{pi_q.__class__.__name__}'
+    save_to_pickle(pi_q, weight)
+
+    reward_tracker.save_to_image()
+    reward_tracker.save_to_file()
+
+    return pi_q
 
 
 def on_policy_visit_monte_carlo_control(env: SingleAgentEnv, eps: float, gamma: float,
-                                        max_iter: int) -> PolicyAndActionValueFunction:
+                                        max_iter: int, env_name: str = '') -> PolicyAndActionValueFunction:
+    # *********** Helper *********
+    name = f'{env_name}_monte_carlo_on_pvc'
+    print_every_n_episodes = 10
+    reward_tracker = RewardTracker(name, 5*print_every_n_episodes)
+    # *********** Helper *********
+
     pi = {}
     q = {}
     returns = {}
@@ -110,6 +129,10 @@ def on_policy_visit_monte_carlo_control(env: SingleAgentEnv, eps: float, gamma: 
             r = env.score() - old_score
             R.append(r)
 
+        # *********** Helper *********
+        reward_tracker(env.score())
+        # *********** Helper *********
+
         G = 0
         for t in reversed(range(len(S))):
             G = gamma * G + R[t]
@@ -138,11 +161,24 @@ def on_policy_visit_monte_carlo_control(env: SingleAgentEnv, eps: float, gamma: 
                 else:
                     pi[s_t][a_key] = eps / available_actions_t_count
 
-    return PolicyAndActionValueFunction(pi, q)
+    pi_q = PolicyAndActionValueFunction(pi, q)
+    weight = f'{WEIGHT_PATH}{env_name}_monte_carlo_on_pvc_{pi_q.__class__.__name__}'
+    save_to_pickle(pi_q, weight)
+
+    reward_tracker.save_to_image()
+    reward_tracker.save_to_file()
+
+    return pi_q
 
 
-def off_policy_visit_monte_carlo_control(env: SingleAgentEnv, eps: float, gamma: float,
-                                         max_iter: int) -> PolicyAndActionValueFunction:
+def off_policy_visit_monte_carlo_control(env: SingleAgentEnv, gamma: float,
+                                         max_iter: int, env_name: str = '') -> PolicyAndActionValueFunction:
+    # *********** Helper *********
+    name = f'{env_name}_monte_carlo_off_pvc'
+    print_every_n_episodes = 10
+    reward_tracker = RewardTracker(name, 5 * print_every_n_episodes)
+    # *********** Helper *********
+
     pi = {}
     q = {}
     C = {}
@@ -183,6 +219,10 @@ def off_policy_visit_monte_carlo_control(env: SingleAgentEnv, eps: float, gamma:
             r = env.score() - old_score
             R.append(r)
 
+        # *********** Helper *********
+        reward_tracker(env.score())
+        # *********** Helper *********
+
         G = 0
         W = 1
         for t in reversed(range(len(S))):
@@ -192,7 +232,7 @@ def off_policy_visit_monte_carlo_control(env: SingleAgentEnv, eps: float, gamma:
             a_t = A[t]
 
             C[s_t][a_t] += W
-            q[s_t][a_t] += (W/C[s_t][a_t]) * (G - q[s_t][a_t])
+            q[s_t][a_t] += (W / C[s_t][a_t]) * (G - q[s_t][a_t])
 
             a_t_opt = list(q[s_t])[np.argmax(list(q[s_t].values()))]
 
@@ -205,6 +245,13 @@ def off_policy_visit_monte_carlo_control(env: SingleAgentEnv, eps: float, gamma:
             if a_t != a_t_opt:
                 break
 
-            W *= 1/b[s_t][a_t]
+            W *= 1 / b[s_t][a_t]
 
-    return PolicyAndActionValueFunction(pi, q)
+    pi_q = PolicyAndActionValueFunction(pi, q)
+    weight = f'{WEIGHT_PATH}{env_name}_monte_carlo_off_pvc_{pi_q.__class__.__name__}'
+    save_to_pickle(pi_q, weight)
+
+    reward_tracker.save_to_image()
+    reward_tracker.save_to_file()
+
+    return pi_q

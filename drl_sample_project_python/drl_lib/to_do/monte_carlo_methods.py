@@ -1,5 +1,5 @@
+from .envs import *
 from .monte_carlo_methods_algos import *
-from .monte_carlo_methods_env import *
 from ..do_not_touch.single_agent_env_wrapper import Env2
 
 
@@ -11,7 +11,7 @@ def monte_carlo_es_on_tic_tac_toe_solo() -> PolicyAndActionValueFunction:
     """
     env = TicTacToe()
 
-    return monte_carlo_es(env, 1, 10000)
+    return monte_carlo_es(env, gamma=0.9999, max_iter=10000, env_name='tictactoe')
 
 
 def on_policy_first_visit_monte_carlo_control_on_tic_tac_toe_solo() -> PolicyAndActionValueFunction:
@@ -24,7 +24,7 @@ def on_policy_first_visit_monte_carlo_control_on_tic_tac_toe_solo() -> PolicyAnd
     """
     env = TicTacToe()
 
-    return on_policy_visit_monte_carlo_control(env, 0.1, 0.9999, 10000)
+    return on_policy_visit_monte_carlo_control(env, eps=0.1, gamma=0.9999, max_iter=10000, env_name='tictactoe')
 
 
 def off_policy_monte_carlo_control_on_tic_tac_toe_solo() -> PolicyAndActionValueFunction:
@@ -36,7 +36,7 @@ def off_policy_monte_carlo_control_on_tic_tac_toe_solo() -> PolicyAndActionValue
     """
     env = TicTacToe()
 
-    return off_policy_visit_monte_carlo_control(env, 0.1, 0.9999, 10000)
+    return off_policy_visit_monte_carlo_control(env, gamma=0.9999, max_iter=10000, env_name='tictactoe')
 
 
 def monte_carlo_es_on_secret_env2() -> PolicyAndActionValueFunction:
@@ -47,7 +47,7 @@ def monte_carlo_es_on_secret_env2() -> PolicyAndActionValueFunction:
     """
     env = Env2()
 
-    return monte_carlo_es(env, 0.9999, 10000)
+    return monte_carlo_es(env, gamma=0.9999, max_iter=10000, env_name='env2')
 
 
 def on_policy_first_visit_monte_carlo_control_on_secret_env2() -> PolicyAndActionValueFunction:
@@ -59,7 +59,7 @@ def on_policy_first_visit_monte_carlo_control_on_secret_env2() -> PolicyAndActio
     """
     env = Env2()
 
-    return on_policy_visit_monte_carlo_control(env, 0.1, 0.9999, 10000)
+    return on_policy_visit_monte_carlo_control(env, eps=0.1, gamma=0.9999, max_iter=10000, env_name='env2')
 
 
 def off_policy_monte_carlo_control_on_secret_env2() -> PolicyAndActionValueFunction:
@@ -71,14 +71,14 @@ def off_policy_monte_carlo_control_on_secret_env2() -> PolicyAndActionValueFunct
     """
     env = Env2()
 
-    return off_policy_visit_monte_carlo_control(env, 0.1, 0.9999, 10000)
+    return off_policy_visit_monte_carlo_control(env, gamma=0.9999, max_iter=10000, env_name='env2')
 
 
 def demo():
     print(monte_carlo_es_on_tic_tac_toe_solo())
-    # print(on_policy_first_visit_monte_carlo_control_on_tic_tac_toe_solo())
-    # print(off_policy_monte_carlo_control_on_tic_tac_toe_solo())
-    #
-    # print(monte_carlo_es_on_secret_env2())
-    # print(on_policy_first_visit_monte_carlo_control_on_secret_env2())
-    # print(off_policy_monte_carlo_control_on_secret_env2())
+    print(on_policy_first_visit_monte_carlo_control_on_tic_tac_toe_solo())
+    print(off_policy_monte_carlo_control_on_tic_tac_toe_solo())
+
+    print(monte_carlo_es_on_secret_env2())
+    print(on_policy_first_visit_monte_carlo_control_on_secret_env2())
+    print(off_policy_monte_carlo_control_on_secret_env2())
