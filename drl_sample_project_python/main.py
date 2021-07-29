@@ -16,10 +16,10 @@ if __name__ == "__main__":
     ##*********************************************##
     ##*********************************************##
 
-    # dynamic_programming.demo()
+    dynamic_programming.demo()
     # monte_carlo_methods.demo()
     # temporal_difference_learning.demo()
-    deep_reinforcement_learning.demo()
+    # deep_reinforcement_learning.demo()
     # policy_gradient_methods.demo()
 
     ##*********************************************##
@@ -41,7 +41,7 @@ if __name__ == "__main__":
     # show_grid_world(grid_env.grid_count, pi_v.v)
     # play_grid_world(grid_env, pi_v, 'policy_iteration')
 
-    # ttt_env = TicTacToe(3)
+    # ttt_env = TicTacToe(3, adv=AdversaryPlayerEnum.HUMAN)
     # # pi_q = load_from_pickle(f'{WEIGHT_PATH}tictactoe_monte_carlo_es_PolicyAndActionValueFunction')
     # # pi_q = load_from_pickle(f'{WEIGHT_PATH}tictactoe_monte_carlo_off_pvc_PolicyAndActionValueFunction')
     # pi_q = load_from_pickle(f'{WEIGHT_PATH}tictactoe_monte_carlo_on_pvc_PolicyAndActionValueFunction')
@@ -72,8 +72,8 @@ if __name__ == "__main__":
     # play_deep_tictactoe(deep_ttt_env, dqn, 'deep_q_learning')
 
     # deep_pac_env = PacMan()
-    # # dqn = tf.keras.models.load_model(f'{WEIGHT_PATH}pacman_deep_q_learning_dqn')
-    # dqn = tf.keras.models.load_model(f'{WEIGHT_PATH}pacman_episodic_semi_gradient_dqn')
+    # dqn = tf.keras.models.load_model(f'{WEIGHT_PATH}pacman_deep_q_learning_dqn')
+    # # dqn = tf.keras.models.load_model(f'{WEIGHT_PATH}pacman_episodic_semi_gradient_dqn')
     # play_deep_pacman(deep_pac_env, dqn, 'deep_q_learning')
 
     ##*********************************************##

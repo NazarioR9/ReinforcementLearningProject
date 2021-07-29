@@ -260,6 +260,7 @@ def deep_q_learning(env: DeepSingleAgentWithDiscreteActionsEnv, epsilon: float, 
         if (episode_id+1) % 100 == 0:
             weight = f'{WEIGHT_PATH}{env_name}_deep_q_learning_dqn'
             dqn.save(weight)
+            reward_tracker.save_to_file()
 
     weight = f'{WEIGHT_PATH}{env_name}_deep_q_learning_dqn'
     dqn.save(weight)
